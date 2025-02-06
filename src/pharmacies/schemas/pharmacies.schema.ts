@@ -16,4 +16,4 @@ export class Pharmacy extends Document {
   website?: string;
 }
 
-export const PharmaciesSchema = SchemaFactory.createForClass(Pharmacy);
+export const PharmacieSchema = SchemaFactory.createForClass(Pharmacy);

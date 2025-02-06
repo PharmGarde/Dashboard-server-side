@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { PharmaciesService } from './pharmacies.service';
 import { CreatePharmacyDto } from './dto/create-pharmacy.dto';
 import { Roles } from 'src/decorators/roles.decorator';
-import { CognitoAuthGuard } from 'src/guadrs/cognito.guard';
+// import { CognitoAuthGuard } from '../guadrs/cognito.guard';
 
 // @UseGuards(CognitoAuthGuard)
 @Controller('pharmacies')
@@ -16,7 +16,7 @@ export class PharmaciesController {
   }
 
   @Get()
-  @Roles('ADMIN')
+  @Roles('USER')
   findAll() {
     return this.pharmaciesService.findAll();
   }
