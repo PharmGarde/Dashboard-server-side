@@ -1,39 +1,41 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CognitoAuthGuard implements CanActivate {
-  private cognitoIdentityServiceProvider: AWS.CognitoIdentityServiceProvider;
-
-  constructor() {
-    AWS.config.update({
-      region: process.env.AWS_REGION,
-    });
-    this.cognitoIdentityServiceProvider =
-      new AWS.CognitoIdentityServiceProvider();
-  }
+  constructor(private usersService: UsersService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.split(' ')[1];
+    const authHeader = request.headers.authorization;
 
-    if (!token) {
-      return false;
+    if (!authHeader) {
+      throw new UnauthorizedException('No token provided');
     }
 
-    try {
-      const params = {
-        AccessToken: token,
-      };
+    const token = authHeader.split(' ')[1];
+    const payload = await this.usersService.validateToken(token);
 
-      const user = await this.cognitoIdentityServiceProvider
-        .getUser(params)
-        .promise();
-
-      request.user = user;
-      return true;
-    } catch (error) {
-      return false;
+    if (!payload) {
+      throw new UnauthorizedException('Invalid token');
     }
+
+    request.user = {
+      ...payload,
+      groups: payload['cognito:groups'] || ['USER'],
+    };
+    
+    console.log('User payload:', {
+      sub: payload.sub,
+      groups: payload['cognito:groups'],
+      fullPayload: payload
+    });
+
+    return true;
   }
 }
