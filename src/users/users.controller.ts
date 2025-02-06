@@ -1,5 +1,5 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
-import { CreateUserDto } from './DTOs/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { CognitoAuthGuard } from 'src/guadrs/cognito.guard';
 import { UsersService } from './users.service';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Pharmacy } from './schemas/pharmacies.schema';
 import { Model } from 'mongoose';
-import { CreatePharmacyDto } from './DTOs/create-pharmacy.dto';
+import { CreatePharmacyDto } from './dto/create-pharmacy.dto';
 
 @Injectable()
 export class PharmaciesService {
