@@ -11,6 +11,10 @@ import { CommentsController } from './comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
 import { FavoritesController } from './favorites/favorites.controller';
 import { FavoritesService } from './favorites/favorites.service';
+import { UsersModule } from './users/users.module';
+import { CommentsModule } from './comments/comments.module';
+import { PharmaciesModule } from './pharmacies/pharmacies.module';
+import { FavoritesModule } from './favorites/favorites.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +26,7 @@ import { FavoritesService } from './favorites/favorites.service';
         uri: process.env.MONGO_URI,
       })
     }),
-    UserModule, PharmacyModule, FavoritesModule, CommentsModule
+    UserModule, PharmacyModule, FavoritesModule, CommentsModule, UsersModule, PharmaciesModule
     
   ],
   controllers: [AppController],
