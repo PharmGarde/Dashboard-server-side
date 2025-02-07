@@ -20,12 +20,14 @@ import { FavoritesService } from './favorites/favorites.service';
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: process.env.MONGO_URI,
-      })
+      }),
     }),
-    UserModule, PharmacyModule, FavoritesModule, CommentsModule
-    
+    UserModule,
+    PharmacyModule,
+    FavoritesModule,
+    CommentsModule,
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {}
