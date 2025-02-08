@@ -9,8 +9,8 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 export class CommentsService {
     constructor(@InjectModel(Comment.name) readonly commentModel: Model<Comment>){}
 
-    getAll(){
-        const comments = this.commentModel.find({}).exec();
+    getAll(pharmacyId: string){
+        const comments = this.commentModel.find({pharmacyId}).exec();
         return comments; 
     }
 
