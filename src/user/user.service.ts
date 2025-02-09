@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,7 @@ export class UserService {
   ) {
     const params = {
       ClientId: process.env.COGNITO_CLIENT_ID,
-      Username: email.split('@')[0],
+      Username: uuidv4(),
       Password: password,
       UserAttributes: [
         {
@@ -68,7 +69,7 @@ export class UserService {
       AuthFlow: 'USER_PASSWORD_AUTH',
       ClientId: process.env.COGNITO_CLIENT_ID,
       AuthParameters: {
-        USERNAME: email.split('@')[0],
+        USERNAME: email, // Use email for authentication
         PASSWORD: password,
       },
     };
@@ -79,7 +80,7 @@ export class UserService {
   async verifyUser(email: string, code: string) {
     const params = {
       ClientId: process.env.COGNITO_CLIENT_ID,
-      Username: email.split('@')[0],
+      Username: email, // Use email for verification
       ConfirmationCode: code,
     };
 
