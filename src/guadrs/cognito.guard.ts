@@ -15,27 +15,42 @@ export class CognitoAuthGuard implements CanActivate {
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-      throw new UnauthorizedException('No token provided');
+      throw new UnauthorizedException('No authorization header provided');
     }
 
-    const token = authHeader.split(' ')[1];
-    const payload = await this.userService.validateToken(token);
+    const [bearer, token] = authHeader.split(' ');
 
-    if (!payload) {
-      throw new UnauthorizedException('Invalid token');
+    if (bearer !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Invalid authorization header format');
     }
 
-    request.user = {
-      ...payload,
-      groups: payload['cognito:groups'] || ['USER'],
-    };
-    
-    console.log('User payload:', {
-      sub: payload.sub,
-      groups: payload['cognito:groups'],
-      fullPayload: payload
-    });
+    try {
+      const payload = await this.userService.validateToken(token);
 
-    return true;
+      if (!payload) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      // Add user info to request
+      request.user = {
+        sub: payload.sub,
+        email: payload.email,
+        groups: payload['cognito:groups'] || ['USER'],
+        ...payload,
+      };
+
+      console.log('Auth successful:', {
+        sub: payload.sub,
+        groups: payload['cognito:groups'],
+        email: payload.email
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Auth error:', error);
+      throw new UnauthorizedException(
+        error.message || 'Token validation failed'
+      );
+    }
   }
 }
