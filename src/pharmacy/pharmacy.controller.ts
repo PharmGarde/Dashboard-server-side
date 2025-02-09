@@ -14,7 +14,7 @@ import { CreatePharmacyDto } from './Dtos/create-pharmacy.dto';
 import { UpdatePharmacyDto } from './Dtos/update-pharmacy.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 
-@Controller('pharmacy')
+@Controller('pharmacies')
 export class PharmacyController {
   constructor(private readonly pharmacyService: PharmacyService) {}
 
